@@ -2,8 +2,6 @@
 
 #### Update 10.18.19 - In Progress
 
-[![Build Status](https://api.travis-ci.org/TrevorMcCormick/adobe-aam.svg?branch=master)](https://api.travis-ci.org/TrevorMcCormick/)
-
 This is a Python wrapper for the Adobe Audience Manager API.
 
 To get started:
