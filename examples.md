@@ -1,7 +1,9 @@
 # Adobe-AAM
 
 #### Examples
-These are basic examples. Peek into the repo to see the available parameters.
+These are basic examples. Peek into the repo to see the available parameters.  
+
+
 | API Endpoint |   Action   |   Code   |
 |:---------|------------|:---------|
 | Oauth | Log In |```Client.from_json(file_path) ``` |
@@ -25,4 +27,4 @@ These are basic examples. Peek into the repo to see the available parameters.
 | SegmentFolders | Get One Segment Folders | ```SegmentFolders.get_one(folderId)```|
 | SegmentFolders | Search Segment Folders by Keyword | ```SegmentFolders.search("all", ["term1", "term2"])```|
 | Destinations | Get All Destinations | ```Destinations.get_many()```|
-| Destinations | Get One Destionation | ```Destination.get_one(destinationId)```|
+| Destinations | Get One Destination | ```Destination.get_one(destinationId)```|
