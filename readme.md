@@ -36,5 +36,7 @@ To get started:
 * ~~Reporting~~
 * ~~DataSources~~
 
+#### [Examples are here!](https://github.com/TrevorMcCormick/adobe-aam/blob/master/examples.md)
+
 ###  Planned Features
 * Custom reports like 'Traits without any lifetime population'
