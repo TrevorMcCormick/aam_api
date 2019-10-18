@@ -1,6 +1,6 @@
 # Adobe-AAM
 
-#### Update 10.14.19 - In Progress
+#### Update 10.18.19 - In Progress
 
 [![Build Status](https://api.travis-ci.org/TrevorMcCormick/adobe-aam.svg?branch=master)](https://api.travis-ci.org/TrevorMcCormick/)
 
@@ -31,9 +31,9 @@ To get started:
 ### Current coverage includes:
 * Traits
 * TraitFolders
-* ~~Segments~~
-* ~~SegmentFolders~~
-* ~~Destinations~~
+* Segments (missing Segments.create)
+* SegmentFolders
+* Destinations (only get methods)
 * ~~DerivedSignals~~
 * ~~Reporting~~
 * ~~DataSources~~
