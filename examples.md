@@ -15,7 +15,7 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Traits | Delete Many Traits | ```Traits.delete(file_path)```|
 | TraitFolders | Get All Trait Folders | ```TraitFolders.get_many()```|
 | TraitFolders | Get One Trait Folders | ```TraitFolders.get_one(folderId)```|
-| TraitFolders | Search Trait Folders by Keyword | ```TraitFolders.search("all", ["term1", "term2"])```|
+| TraitFolders | Search Trait Folders by Keyword | ```TraitFolders.search(column="name", type="all", keywords=["term1", "term2"])```|
 | Segments | Get All Segments | ```Segments.get_many()```|
 | Segments | Get One Segments | ```Segments.get_one(sid)```|
 | Segments | Search Segments by Keyword | ```Segments.search("all", ["term1", "term2"])```|
