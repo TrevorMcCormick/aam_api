@@ -9,7 +9,7 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Oauth | Log In |```Client.from_json(file_path) ``` |
 | Traits | Get All Traits | ```Traits.get_many()```|
 | Traits | Get One Trait | ```Traits.get_one(traitId)```|
-| Traits | Search Traits by Keyword | ```Traits.search("all", ["term1", "term2"])```|
+| Traits | Search Traits by Keyword | ```Traits.search(column="name", type="all", keywords=["term1", "term2"])```|
 | Traits | Get Trait Limits | ```Traits.get_limits()```|
 | Traits | Create Many Traits | ```Traits.create(file_path)```|
 | Traits | Delete Many Traits | ```Traits.delete(file_path)```|
