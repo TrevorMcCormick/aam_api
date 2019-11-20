@@ -71,3 +71,49 @@ class Destinations:
                          'destinationId', 'dataSourceId',
                          'createTime', 'updateTime']]
             return df
+
+    @classmethod
+    def create_one(cls,destinations):
+        if type(destinations) != pd.core.frame.DataFrame:
+            destinations = toDataFrame(destinations)
+        if type(destinations) == pd.core.frame.DataFrame:
+            successful_destinations = 0
+        for i in range(0, len(segments)):
+            data = {"mappingAutoFiller": segments.loc[i]['name'],
+                   "endDate": segments.loc[i]['name'],
+                   "mapAllSegments": segments.loc[i]['name'],
+                   "description": segments.loc[i]['name'],
+                   "devicePlatform": segments.loc[i]['name'],
+                   "destinationId": segments.loc[i]['name'],
+                   "dataExportLabels": segments.loc[i]['name'],
+                   "maxMappings": segments.loc[i]['name']0,
+                   "mappings": segments.loc[i]['name'],
+                   "dataSourceId": segments.loc[i]['name'],
+                   "name": segments.loc[i]['name'],
+                   "destinationType": segments.loc[i]['name'],
+                   "startDate": segments.loc[i]['name']
+                }
+            response = apiRequest(call="destinations", method="post", data=data)
+            status = response.status_code
+            if status == 201:
+                print('Created segment: {0}'.format(destinations.iloc[i]['name']))
+                successful_destinations += 1
+            elif status == 400:
+                print("Bad Request")
+            elif status == 403:
+                print("Forbidden")
+            elif status == 409:
+                print("Conflict")
+            else:
+                print(status)
+            return('Created {0} destinations.'.format(successful_destinations))
+        # else:
+        #     print('Wrong data type. Please insert a df or upload an excel file with the following fields to create a destinations:')
+        #     d = {"name": ["segment1", "segment2", "segment3"],
+        #         "description": ['description1', 'description2', 'description3'],
+        #         "folderId": ['1234', '2345', '3456'],
+        #         "integrationCode": ['seg-abcd', 'seg-abcde', 'seg-123'],
+        #         "segmentRule": ["(123T AND 456T)", "(234T AND 456T)", "(345T AND 456T)"],
+        #          "dataSourceId": ['1010', '1010', '1010']}
+        #     df = pd.DataFrame(data=d)
+        #     print(df)
