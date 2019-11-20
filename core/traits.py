@@ -92,9 +92,21 @@ class Traits:
         if type(traits) == pd.core.frame.DataFrame:
             successful_traits = 0
             for i in range(0, len(traits)):
-                data = {"comments":traits.loc[i]['comments'],
-                        "description":traits.loc[i]['description'],
-                        "ttl":int(traits.loc[i]['ttl']),
+                try:
+                    comments = traits.loc[i]['comments']
+                except:
+                    comments = None
+                try:
+                    description = traits.loc[i]['description']
+                except:
+                    description = None
+                try:
+                    ttl = int(traits.loc[i]['ttl'])
+                except:
+                    ttl = 120
+                data = {"comments":comments,
+                        "description":description,
+                        "ttl":ttl,
                         "folderId":int(traits.loc[i]['folderId']),
                         "traitRule":traits.loc[i]['traitRule'],
                         "dataSourceId":int(traits.loc[i]['dataSourceId']),
@@ -117,7 +129,7 @@ class Traits:
                     print("Conflict")
             return('Created {0} traits.'.format(successful_traits))
         else:
-            print('Wronge data type. Please insert a df or upload an excel file with the following fields to create a trait:')
+            print('Wrong data type. Please insert a df or upload an excel file with the following fields to create a trait:')
             d = {"name": ["trait1", "trait2", "trait3"],
                  "traitType": ["RULE_BASED_TRAIT", "RULE_BASED_TRAIT", "RULE_BASED_TRAIT"],
                  "comments": ['comment1', 'comment2', 'comment3'],
