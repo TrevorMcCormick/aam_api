@@ -3,62 +3,90 @@
 class SegmentFolders:
     @classmethod
     def get_many(cls):
-        data = {}
-        response = apiRequest(call="folders/traits", method="get", data=data)
-        if response.status_code != 200:
-            return('Error getting list of segmentFolders. Adobe message: {0}'.format(response.status_code))
-        else:
-            folders_json = response.json()
-            folders_flat = flattenJson(folders_json)
-            df = folders_flat
-            folderIDs = []
-            parentFolderIDs = []
-            paths = []
-            for k, v in folders_flat.items():
-                if k.endswith("folderId") == True:
-                    folderIDs.append(v)
-                elif k.endswith("parentFolderId"):
-                    parentFolderIDs.append(v)
-                elif k.endswith("path"):
-                    paths.append(v)
-            df = pd.DataFrame({'folderId':folderIDs, 'parentFolderId':parentFolderIDs, 'path':paths})
-            return df
+            """
+                Get multiple AAM SegmentFolders.
+                Args:
+                    None
+                Returns:
+                    df of all folderIds, parentFolderIds, and paths to which the AAM API user has READ access.
+            """
+            data = {}
+            response = apiRequest(call="folders/traits", method="get", data=data)
+            status = response.status_code
+            if status != 200:
+                raise APIError(status)
+            else:
+                folders_json = response.json()
+                folders_flat = flattenJson(folders_json)
+                df = folders_flat
+                folderIDs = []
+                parentFolderIDs = []
+                paths = []
+                for k, v in folders_flat.items():
+                    if k.endswith("folderId") == True:
+                        folderIDs.append(v)
+                    elif k.endswith("parentFolderId"):
+                        parentFolderIDs.append(v)
+                    elif k.endswith("path"):
+                        paths.append(v)
+                df = pd.DataFrame({'folderId':folderIDs, 'parentFolderId':parentFolderIDs, 'path':paths})
+                return df
 
-#     @classmethod
-#     def get_one(cls,
-#         folderId,
-#         includeSubFolders=None):
-#         data = {"includeSubFolders":includeSubFolders}
-#         response = apiRequest(call="folders/segments/{0}".format(folderId), method="get")
-#         if response.status_code != 200:
-#             return('Error getting folder. Adobe message: {0}'.format(response.status_code))
-#         else:
-#             if includeSubFolders == True:
-#                 folders_json = response.json()
-#                 folders_flat = flattenJson(folders_json)
-#                 df = folders_flat
-#                 folderIDs = []
-#                 parentFolderIDs = []
-#                 paths = []
-#                 for k, v in folders_flat.items():
-#                     if k.endswith("folderId") == True:
-#                         folderIDs.append(v)
-#                     elif k.endswith("parentFolderId"):
-#                         parentFolderIDs.append(v)
-#                     elif k.endswith("path"):
-#                         paths.append(v)
-#                 df = pd.DataFrame({'folderId':folderIDs, 'parentFolderId':parentFolderIDs, 'path':paths})
-#             else:
-#                 df = bytesToJson(response.content)
-#         return df
+    @classmethod
+    def get_one(cls,
+        folderId,
+        includeSubFolders=None):
+            """
+                Get multiple AAM SegmentFolders.
+                Args:
+                    folderId: (int) Folder ID.
+                    includeSubFolders: (bool) Scans subfolders and returns in df.
+                Returns:
+                    df of one folderId, with optional subfolders, provided the AAM API user has READ access.
+            """
+            data = {"includeSubFolders":includeSubFolders}
+            response = apiRequest(call="folders/segments/{0}/".format(folderId), method="get")
+            status = response.status_code
+            if status != 200:
+                raise APIError(status)
+            else:
+                if includeSubFolders == True:
+                    folders_json = response.json()
+                    folders_flat = flattenJson(folders_json)
+                    df = folders_flat
+                    folderIDs = []
+                    parentFolderIDs = []
+                    paths = []
+                    for k, v in folders_flat.items():
+                        if k.endswith("folderId") == True:
+                            folderIDs.append(v)
+                        elif k.endswith("parentFolderId"):
+                            parentFolderIDs.append(v)
+                        elif k.endswith("path"):
+                            paths.append(v)
+                    df = pd.DataFrame({'folderId':folderIDs, 'parentFolderId':parentFolderIDs, 'path':paths})
+                else:
+                    df = bytesToJson(response.content)
+            return df
 
     @classmethod
     def search(cls, search, keywords):
-        segmentFolders = SegmentFolders.get_many()
-        if search=="any":
-            result = segmentFolders.path.apply(lambda sentence: any(keyword in sentence for keyword in keywords))
-            df = segmentFolders[result]
-        elif search=="all":
-            result = segmentFolders.path.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
-            df = segmentFolders[result]
-        return(df)
+            """
+                Advanced search through segmentfolders.
+                Args:
+                    search: (str) "any" matches any of the terms, "all" matches all of the terms.
+                    keywords: (list or comma-separated string) Terms to search within Folder path.
+                Returns:
+                    df of folderIds with matching search, provided the AAM API user has READ access.
+            """
+            segmentFolders = SegmentFolders.get_many()
+            if type(keywords) != list:
+                split = keywords.split(",")
+                keywords = split
+            if search=="any":
+                result = segmentFolders.path.apply(lambda sentence: any(keyword in sentence for keyword in keywords))
+                df = segmentFolders[result]
+            elif search=="all":
+                result = segmentFolders.path.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
+                df = segmentFolders[result]
+            return df

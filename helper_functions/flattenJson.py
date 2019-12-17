@@ -1,6 +1,6 @@
 #' flattenJson
 
-def flatten_json(nested_json):
+def flattenJson(nested_json):
     """
         Flatten json object with nested keys into a single level.
         Args:

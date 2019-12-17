@@ -3,9 +3,8 @@
 class Traits:
     @classmethod
     def get_many(cls,
-            limitcols=True,
-            excludeRule=False,
-            includeMetrics=True,
+            limitcols=None,
+            includeMetrics=None,
             restrictType=None,
             usesModel=None,
             permission=None,
@@ -15,81 +14,134 @@ class Traits:
             integrationCode=None,
             dataSourceId=None,
             pid=None,
-            includeTraitsForAvailableFeed=None,
             type=None,
-            includeDetails=None,
-            backfillStatus=None,
-            currentMonthTraitsWithBackfillOnly=None
+            includeDetails=None
             ):
-        data = {"excludeRule":excludeRule,
-                "includeMetrics":includeMetrics,
-                "restrictType":restrictType,
-                "usesModel":usesModel,
-                "permission":permission,
-                "includePermissions":includePermissions,
-                "categoryId":categoryId,
-                "folderId":folderId,
-                "integrationCode":integrationCode,
-                "dataSourceId":dataSourceId,
-                "pid":pid,
-                "includeTraitsForAvailableFeed":includeTraitsForAvailableFeed,
-                "type":type,
-                "includeDetails":includeDetails,
-                "backfillStatus":backfillStatus,
-                "currentMonthTraitsWithBackfillOnly":currentMonthTraitsWithBackfillOnly
-                }
-        response = apiRequest(call="traits", method="get", data=data)
-        if response.status_code != 200:
-            return('Error getting list of traitIds. Adobe message: {0}'.format(response.status_code))
-        else:
-            df = pd.DataFrame(response.json())
-            df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
-            df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
-            if limitcols:
-                df = df[['name', 'description', 'traitType',
-                         'sid', 'folderId', 'dataSourceId',
-                         'createTime', 'updateTime']]
-            return df
+            """
+                Get AAM Traits
+                Args:
+                    limitCols: (bool) List of df columns to subset.
+                    includeMetrics: (bool) Includes many metrics columns by trait.
+                    restrictType: (str) Filter by one or more trait type values.
+                    usesModel: (int) Filter by algorithmic model ID.
+                    permission: (str) Filter by permission type.
+                    includePermissions: (bool) Include permissions column.
+                    categoryId: (int) Filter by trait categories; ex: Automotive.
+                    folderId: (int) Filter by Folder ID.
+                    integrationCode: (str) Filter by integration code.
+                    dataSourceId: (id) Filter by data source ID.
+                    pid: (int) Your AAM enterprise ID.
+                    type: (int) Filter by specific trait type value.
+                    includeDetails: (bool) Includes varius detail columns such as ttl and traitRule.
+                Returns:
+                    df of traits to which the AAM API user has READ access.
+            """
+            data = {"includeMetrics":includeMetrics,
+                    "restrictType":restrictType,
+                    "usesModel":usesModel,
+                    "permission":permission,
+                    "includePermissions":includePermissions,
+                    "categoryId":categoryId,
+                    "folderId":folderId,
+                    "integrationCode":integrationCode,
+                    "dataSourceId":dataSourceId,
+                    "pid":pid,
+                    "type":type,
+                    "includeDetails":includeDetails
+                    }
+            response = apiRequest(call="traits", method="get", data=data)
+            status = response.status_code
+            if status != 200:
+                raise APIError(status)
+            else:
+                df = pd.DataFrame(response.json())
+                df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
+                df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
+                if limitcols:
+                    df = df[['name', 'description', 'traitType',
+                             'sid', 'folderId', 'dataSourceId',
+                             'createTime', 'updateTime']]
+                return df
 
     @classmethod
     def get_one(cls,
                 sid,
-                limitCols=True,
-                excludeRule=None,
+                limitCols=None,
                 includeExprTree=None,
-                includeSegmentTestGroupIds=None,
                 includeMetrics=None):
-        data = {"excludeRule":excludeRule,
-                "includeExprTree":includeExprTree,
-                "includeSegmentTestGroupIds":includeSegmentTestGroupIds,
+            """
+                Get AAM Traits
+                Args:
+                    limitCols: (bool) List of df columns to subset.
+                    includeExprTree: (bool) Includes traits, mappableTraits, codeViewOnly, and expressionTree columns.
+                    includeMetrics: (bool) Includes many metrics columns by trait.
+                Returns:
+                    Transposed df of one trait to which the AAM API user has READ access.
+            """
+            data = {"includeExprTree":includeExprTree,
                 "includeMetrics":includeMetrics
                }
-        response = apiRequest(call="traits/{0}".format(str(sid)), method="get", data=data)
-        if response.status_code != 200:
-            message = json.loads(response.content.decode('utf-8'))['message']
-            return('Error getting traitId {0}. Adobe message: {1}'.format(sid, message))
-        else:
-            df = pd.DataFrame(response.json())
-            df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
-            df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
-            df = df.head(1)
-            if limitCols:
-                df = df[['name', 'description', 'traitType',
-                         'sid', 'folderId', 'dataSourceId',
-                         'createTime', 'updateTime']]
-            return df
+            response = apiRequest(call="traits/{0}".format(str(sid)), method="get", data=data)
+            status = response.status_code
+            if status != 200:
+                raise APIError(status)
+            else:
+                df = pd.DataFrame.from_dict(response.json(), orient='index')
+                df.transpose()
+                df.at['createTime', 0] = pd.to_datetime(df.at['createTime', 0], unit='ms')
+                df.at['updateTime', 0] = pd.to_datetime(df.at['updateTime', 0], unit='ms')
+                if limitCols:
+                    df = df.loc[ ['name', 'description', 'sid',
+                             'folderId', 'dataSourceId',
+                             'createTime', 'updateTime'] , : ]
+                return df
 
     @classmethod
     def get_limits(cls):
-        response = apiRequest(call="traits/limits", method="get")
-        df = bytesToJson(response.content)
-        return df
+            """
+               Get AAM traits limit.
+               Args:
+                   None
+               Returns:
+                   Max number of traits you can create in AAM.
+            """
+            response = apiRequest(call="traits/limits", method="get")
+            status = response.status_code
+            if status != 200:
+                raise APIError(status)
+            else:
+                df = bytesToJson(response.content)
+                return df.transpose()
 
     @classmethod
     def create(cls,traits):
-        if type(traits) != pd.core.frame.DataFrame:
-            traits = toDataFrame(traits)
-        if type(traits) == pd.core.frame.DataFrame:
+            """
+               Creates AAM Trait.
+               Args:
+                   traits: (Excel or csv) List of traits to create.
+               Returns:
+                   String with trait create success and # of traits created.
+            """
+            try:
+                traits = toDataFrame(traits)
+            except:
+                print("Failed to transform traits to dataframe.")
+                raise
+            try:
+                req_cols = [
+                    'name',
+                    'traitType',
+                    'dataSourceId',
+                    'traitRule',
+                    'folderId',
+                    'ttl',
+                    'description',
+                    'comments'
+                ]
+                if req_cols != list(traits):
+                    raise ValueError('Traits column names are incorrect')
+            except (ValueError):
+                raise
             successful_traits = 0
             for i in range(0, len(traits)):
                 try:
@@ -118,58 +170,63 @@ class Traits:
                 #figure out why line below does not work
                 #response = apiRequest(call="traits", method="post", data=data)
                 status = response.status_code
-                if status == 201:
+                if status != 201:
+                    raise APIError(status)
+                elif status == 201:
                     print('Created trait: {0}'.format(traits.iloc[i]['name']))
                     successful_traits += 1
-                elif status == 400:
-                    print("Bad Request")
-                elif status == 403:
-                    print("Forbidden")
-                elif status == 409:
-                    print("Conflict")
             return('Created {0} traits.'.format(successful_traits))
-        else:
-            print('Wrong data type. Please insert a df or upload an excel file with the following fields to create a trait:')
-            d = {"name": ["trait1", "trait2", "trait3"],
-                 "traitType": ["RULE_BASED_TRAIT", "RULE_BASED_TRAIT", "RULE_BASED_TRAIT"],
-                 "comments": ['comment1', 'comment2', 'comment3'],
-                 "description": ['description1', 'description2', 'description3'],
-                 "folderId": ['1234', '2345', '3456'],
-                 "dataSourceId": ['1010', '1010', '1010'],
-                 "ttl": [120, 120, 120]}
-            df = pd.DataFrame(data=d)
-            print(df)
 
     @classmethod
     def delete(cls,traits):
-        if type(traits) != pd.core.frame.DataFrame:
-            traits = toDataFrame(traits)
-        if type(traits) == pd.core.frame.DataFrame:
+            """
+               Deletes AAM Trait.
+               Args:
+                   traits: (Excel or csv) List of traits to delete.
+               Returns:
+                   String with trait create success and # of traits created.
+            """
+            try:
+                traits = toDataFrame(traits)
+            except:
+                print("Failed to transform traits to dataframe.")
+                raise
+            try:
+                req_cols = ['sid', 'name']
+                if req_cols != list(traits):
+                    raise ValueError("Trait column names are incorrect.")
+            except (ValueError):
+                raise
             deleted_traits = 0
             for i in range(0, len(traits)):
-                data = {"sid":int(traits.loc[i]['sid']),
-                       "name":traits.loc[i]['name']}
+                data = {"sid":int(traits.loc[i]['sid'])}
                 sid = data['sid']
                 response = apiRequest(call="traits/{0}".format(sid), method="delete", data=data)
                 status = response.status_code
-                if status == 204:
-                    print('Deleted trait: {0}'.format(traits.iloc[i]['name']))
+                if status != 204:
+                    raise APIError(status)
+                elif status == 204:
                     deleted_traits += 1
-                elif status == 400:
-                    print("Bad Request")
-                elif status == 403:
-                    print("Forbidden")
-                elif status == 404:
-                    print("Trait not found")
             return('Deleted {0} traits.'.format(deleted_traits))
-        else:
-            print('Wronge data type. Please insert a df with name and sid to delete. Example:')
-            d = {"name": ["trait1", "trait2", "trait3"], "sid": ["1234", "2345", "3456"]}
-            df = pd.DataFrame(data=d)
-            print(df)
 
     @classmethod
-    def search(cls, column, type, keywords):
-        df = Traits.get_many()
-        filtered_df = search(df, column, type, keywords)
-        return(filtered_df)
+    def search(cls, search, keywords):
+            """
+                Advanced search through traits.
+                Args:
+                    search: (str) "any" matches any of the terms, "all" matches all of the terms.
+                    keywords: (list or comma-separated string) Terms to search within Folder path.
+                Returns:
+                    df of traits with matching search, provided the AAM API user has READ access.
+            """
+            traits = Traits.get_many()
+            if type(keywords) != list:
+                split = keywords.split(",")
+                keywords = split
+            if search=="any":
+                result = traits.name.apply(lambda sentence: any(keyword in sentence for keyword in keywords))
+                df = segments[result]
+            elif search=="all":
+                result = traits.name.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
+                df = traits[result]
+            return df
