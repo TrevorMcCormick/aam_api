@@ -101,43 +101,50 @@ class Segments:
                              'createTime', 'updateTime'] , : ]
                 return df
 
-### 415 Error
-#     @classmethod
-#     def create_one(cls,segments):
-#         try:
-#             segments = toDataFrame(segments)
-#         except:
-#             print("Failed to transform segments to dataframe.")
-#             raise
-#         try:
-#             req_cols = [
-#             'dataSourceId',
-#             'integrationCode',
-#             'mergeRuleDataSourceId',
-#             'name',
-#             'description',
-#             'segmentRule',
-#             'folderId'
-#             ]
-#             if req_cols != list(segments):
-#                 raise ValueError('Segments column names are incorrect')
-#         except (ValueError):
-#             raise
-#         for i in range(0, len(segments)):
-#             data = {"dataSourceId": segments.loc[i]['dataSourceId'],
-#                    "integrationCode": segments.loc[i]['integrationCode'],
-#                    "mergeRuleDataSourceId": segments.loc[i]['mergeRuleDataSourceId'],
-#                    "name": segments.loc[i]['name'],
-#                    "description": segments.loc[i]['description'],
-#                    "segmentRule": segments.loc[i]['segmentRule'],
-#                    "folderId": segments.loc[i]['folderId']
-#                 }
-#             response = apiRequest(call="segments", method="post", data=data)
-#             status = response.status_code
-#             if status != 201:
-#                 raise APIError(status)
-#             elif status == 201:
-#                 print('Created segment: {0}'.format(segments.iloc[i]['name']))
+    @classmethod
+    def create(cls,segments):
+            """
+               Create multiple AAM Segments.
+               Args:
+                   segments: (Excel or csv) List of segments to create.
+               Returns:
+                   String with segment create success and # of segments created.
+            """
+            try:
+                segments = toDataFrame(segments)
+            except:
+                print("Failed to transform segments to dataframe.")
+                raise
+            try:
+                req_cols = [
+                'dataSourceId',
+                'mergeRuleDataSourceId',
+                'name',
+                'description',
+                'segmentRule',
+                'folderId'
+                ]
+                if req_cols != list(segments):
+                    raise ValueError('Segments column names are incorrect')
+            except (ValueError):
+                raise
+            for i in range(0, len(segments)):
+                data = {"dataSourceId": int(segments.loc[i]['dataSourceId']),
+                       "mergeRuleDataSourceId": int(segments.loc[i]['mergeRuleDataSourceId']),
+                       "name": segments.loc[i]['name'],
+                       "description": segments.loc[i]['description'],
+                       "segmentRule": segments.loc[i]['segmentRule'],
+                       "folderId": int(segments.loc[i]['folderId'])
+                    }
+                data = json.dumps(data)
+                header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
+                response = requests.post('https://api.demdex.com/v1/segments/', headers=header, data=data)
+                status = response.status_code
+                if status != 201:
+                    raise APIError(status)
+                elif status == 201:
+                    print('Created segment: {0}'.format(segments.iloc[i]['name']))
+
 
 
     @classmethod
