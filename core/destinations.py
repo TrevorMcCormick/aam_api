@@ -89,52 +89,52 @@ class Destinations:
                              'createTime', 'updateTime'] , : ]
                 return df
 
-### 415 Error
-#     @classmethod
-#     def create_one(cls,destinations):
-#         try:
-#             destinations = toDataFrame(destinations)
-#         except:
-#             print("Failed to transform destinations to dataframe.")
-#             raise
-#         try:
-#             req_cols = [
-#             'destinationId',
-#             'name',
-#             'description',
-#             'destinationType',
-#             'mapAllSegments',
-#             'mappingAutoFiller',
-#             'dataExportLabels',
-#             'hideReferrer',
-#             'devicePlatform',
-#             'serializationEnabled',
-#             'urlFormatString',
-#             'secureUrlFormatString',
-#             'delimiter'
-#             ]
-#             if req_cols != list(destinations):
-#                 raise ValueError('Destinations column names are incorrect')
-#         except (ValueError):
-#             raise
-#         for i in range(0, len(destinations)):
-#             data = {"destinationId": destinations.loc[i]['destinationId'],
-#                    "name": destinations.loc[i]['name'],
-#                    "description": destinations.loc[i]['description'],
-#                    "destinationType": destinations.loc[i]['destinationType'],
-#                    "mapAllSegments": destinations.loc[i]['mapAllSegments'],
-#                    "mappingAutoFiller": destinations.loc[i]['mappingAutoFiller'],
-#                    "dataExportLabels": destinations.loc[i]['dataExportLabels'],
-#                    "hideReferrer": destinations.loc[i]['hideReferrer'],
-#                    "devicePlatform": destinations.loc[i]['devicePlatform'],
-#                    "serializationEnabled": destinations.loc[i]['serializationEnabled'],
-#                    "urlFormatString": destinations.loc[i]['urlFormatString'],
-#                    "secureUrlFormatString": destinations.loc[i]['secureUrlFormatString'],
-#                    "delimiter": destinations.loc[i]['delimiter']
-#                 }
-#             response = apiRequest(call="destinations", method="post", data=data)
-#             status = response.status_code
-#             if status != 201:
-#                 raise APIError(status)
-#             elif status == 201:
-#                 print('Created destination: {0}'.format(destinations.iloc[i]['name']))
+    @classmethod
+    def create(cls,destinations):
+            """
+                Create many AAM Destinations.
+                Args:
+                    destinations: (Excel or csv) List of destinations to create.
+                Returns:
+                    String with segment create success.
+            """
+            try:
+                destinations = toDataFrame(destinations)
+            except:
+                print("Failed to transform destinations to dataframe.")
+                raise
+            try:
+                req_cols = [
+                'name',
+                'description',
+                'destinationType',
+                #'mapAllSegments',
+                #'mappingAutoFiller',
+                #'dataExportLabels',
+                #'devicePlatform',
+                #'urlFormatString',
+                #'secureUrlFormatString'
+                ]
+                if req_cols != list(destinations):
+                    raise ValueError('Destinations column names are incorrect')
+            except (ValueError):
+                raise
+            for i in range(0, len(destinations)):
+                data = {
+                       "name": destinations.loc[i]['name'],
+                       "description": destinations.loc[i]['description'],
+                       "destinationType": destinations.loc[i]['destinationType'],
+                       #"mapAllSegments": destinations.loc[i]['mapAllSegments'],
+                       #"mappingAutoFiller": destinations.loc[i]['mappingAutoFiller'],
+                       #"dataExportLabels": destinations.loc[i]['dataExportLabels'],
+                       #"devicePlatform": destinations.loc[i]['devicePlatform'],
+                       #"serializationEnabled": destinations.loc[i]['serializationEnabled']
+                    }
+                data = json.dumps(data)
+                header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
+                response = requests.post('https://api.demdex.com/v1/destinations/', headers=header, data=data)
+                status = response.status_code
+                if status != 201:
+                    raise APIError(status)
+                elif status == 201:
+                    print('Created destination: {0}'.format(destinations.iloc[i]['name']))
