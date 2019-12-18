@@ -21,10 +21,13 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Segments | Search Segments by Keyword | ```Segments.search("all", ["term1", "term2"])```|
 | Segments | Get Segment Limits | ```Segments.get_limits()```|
 | Segments | Get Segment Mappings | ```Segments.get_one_destinations(sid)```|
-| ~~Segments~~ | ~~Create Many Segments~~ | ~~```Traits.create()```~~|
-| Segments | Delete Many Segments | ```Traits.delete()```|
+| Segments | Create Many Segments | ~~```Segments.create()```~~|
+| Segments | Delete Many Segments | ```Segments.delete()```|
 | SegmentFolders | Get All Segment Folders | ```SegmentFolders.get_many()```|
 | SegmentFolders | Get One Segment Folders | ```SegmentFolders.get_one(folderId)```|
 | SegmentFolders | Search Segment Folders by Keyword | ```SegmentFolders.search("all", ["term1", "term2"])```|
 | Destinations | Get All Destinations | ```Destinations.get_many()```|
 | Destinations | Get One Destination | ```Destination.get_one(destinationId)```|
+| Destinations | Create Many Destinations | ```Destinations.create()```|
+| Derived Signals | Get All Derived Signals | ```DerivedSignals.get_many()```|
+| Destinations | Create Many Destinations | ```Destinations.create()```|

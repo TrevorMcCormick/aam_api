@@ -1,6 +1,6 @@
 # Adobe-AAM
 
-#### Update 10.18.19 - In Progress
+#### Update 12.18.19 - v1.0 stable!
 
 This is a Python wrapper for the Adobe Audience Manager API.
 
@@ -29,14 +29,13 @@ To get started:
 ### Current coverage includes:
 * Traits
 * TraitFolders
-* Segments (missing Segments.create)
+* Segments
 * SegmentFolders
-* Destinations (only get methods)
-* ~~DerivedSignals~~
-* ~~Reporting~~
-* ~~DataSources~~
+* Destinations
+* DerivedSignals
 
 #### [Examples are here!](https://github.com/TrevorMcCormick/adobe-aam/blob/master/examples.md)
 
 ###  Planned Features
-* Custom reports like 'Traits without any lifetime population'
+* Custom reporting
+* d3 dashboard
