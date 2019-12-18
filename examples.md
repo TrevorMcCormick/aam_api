@@ -21,7 +21,7 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Segments | Search Segments by Keyword | ```Segments.search("all", ["term1", "term2"])```|
 | Segments | Get Segment Limits | ```Segments.get_limits()```|
 | Segments | Get Segment Mappings | ```Segments.get_one_destinations(sid)```|
-| Segments | Create Many Segments | ~~```Segments.create()```~~|
+| Segments | Create Many Segments | ```Segments.create()```|
 | Segments | Delete Many Segments | ```Segments.delete()```|
 | SegmentFolders | Get All Segment Folders | ```SegmentFolders.get_many()```|
 | SegmentFolders | Get One Segment Folders | ```SegmentFolders.get_one(folderId)```|
