@@ -34,6 +34,13 @@ To get started:
 * Destinations
 * DerivedSignals
 
+### Current extra features include:
+* Mapper
+- Segments to Destination ID
+- Segments to All destinations
+- ~~Traits to Segment ID~~
+- ~~Traits to All segments~~
+
 #### [Examples are here!](https://github.com/TrevorMcCormick/adobe-aam/blob/master/examples.md)
 
 ###  Planned Features

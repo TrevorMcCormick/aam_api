@@ -30,4 +30,10 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Destinations | Get One Destination | ```Destination.get_one(destinationId)```|
 | Destinations | Create Many Destinations | ```Destinations.create()```|
 | Derived Signals | Get All Derived Signals | ```DerivedSignals.get_many()```|
-| Derived Signals | Create Many Derived Signals | ```DerivedSignals.create()```|
+| Derived Signals | Create Many Derived Signals | ```DerivedSignals.create()```|  
+
+
+| Bonus Classes |   Action   |   Code   |
+|:---------|------------|:---------|
+| Mapper | Map Segments to Destination ID |```Mapper.segmentsToDestination(destinationId) ``` |
+| Mapper | Map Segments to All Destinations |```Mapper.segmentsToDestinations() ``` |
