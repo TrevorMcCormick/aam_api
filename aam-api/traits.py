@@ -1,5 +1,3 @@
-#' getTraits
-
 class Traits:
     @classmethod
     def get_many(cls,

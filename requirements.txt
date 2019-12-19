@@ -1,3 +1,4 @@
 requests
 pandas
 xlrd
+twine==1.13.0

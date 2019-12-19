@@ -1,5 +1,3 @@
-#' derivedSignals
-
 class DerivedSignals:
     @classmethod
     def get_many(cls,

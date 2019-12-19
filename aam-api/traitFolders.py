@@ -1,16 +1,18 @@
-#' SegmentFolders
-
-class SegmentFolders:
+class TraitFolders:
     @classmethod
-    def get_many(cls):
+    def get_many(cls,
+            includeThirdParty=None,
+            dataSourceId=None):
             """
-                Get multiple AAM SegmentFolders.
+                Get multiple AAM TraitFolders.
                 Args:
-                    None
+                    includeThirdParty: (bool) Includes 3rd Party TraitFolders (defaults True).
+                    dataSourceId: (int) Filter TraitFolders by Data Source ID.
                 Returns:
                     df of all folderIds, parentFolderIds, and paths to which the AAM API user has READ access.
             """
-            data = {}
+            data = {"includeThirdParty":includeThirdParty,
+                "dataSourceId":dataSourceId}
             response = apiRequest(call="folders/traits", method="get", data=data)
             status = response.status_code
             if status != 200:
@@ -37,15 +39,14 @@ class SegmentFolders:
         folderId,
         includeSubFolders=None):
             """
-                Get multiple AAM SegmentFolders.
+                Get one AAM TraitFolder.
                 Args:
-                    folderId: (int) Folder ID.
                     includeSubFolders: (bool) Scans subfolders and returns in df.
                 Returns:
                     df of one folderId, with optional subfolders, provided the AAM API user has READ access.
             """
             data = {"includeSubFolders":includeSubFolders}
-            response = apiRequest(call="folders/segments/{0}/".format(folderId), method="get")
+            response = apiRequest(call="folders/traits/{0}".format(folderId), method="get", data=data)
             status = response.status_code
             if status != 200:
                 raise APIError(status)
@@ -71,22 +72,14 @@ class SegmentFolders:
 
     @classmethod
     def search(cls, search, keywords):
-            """
-                Advanced search through segmentfolders.
-                Args:
-                    search: (str) "any" matches any of the terms, "all" matches all of the terms.
-                    keywords: (list or comma-separated string) Terms to search within Folder path.
-                Returns:
-                    df of folderIds with matching search, provided the AAM API user has READ access.
-            """
-            segmentFolders = SegmentFolders.get_many()
-            if type(keywords) != list:
-                split = keywords.split(",")
-                keywords = split
-            if search=="any":
-                result = segmentFolders.path.apply(lambda sentence: any(keyword in sentence for keyword in keywords))
-                df = segmentFolders[result]
-            elif search=="all":
-                result = segmentFolders.path.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
-                df = segmentFolders[result]
-            return df
+        traitFolders = TraitFolders.get_many()
+        if type(keywords) != list:
+            split = keywords.split(",")
+            keywords = split
+        if search=="any":
+            result = traitFolders.path.apply(lambda sentence: any(keyword in sentence for keyword in keywords))
+            df = traitFolders[result]
+        elif search=="all":
+            result = traitFolders.path.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
+            df = traitFolders[result]
+        return df

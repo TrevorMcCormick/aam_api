@@ -1,5 +1,3 @@
-#' segments
-
 class Segments:
     @classmethod
     def get_many(cls,
