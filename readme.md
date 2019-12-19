@@ -22,7 +22,7 @@ To get started:
     ```sh
     $ pip install git+git://github.com/trevormccormick/adobe-aam.git
     ```
-5. Create a json file containing your AAM credentials
+5. Use the Client method to log in to AAM.
     ```py
     Client.from_json('aam_credentials.json')
     ```
