@@ -18,9 +18,9 @@ To get started:
     **username**:"username",  
 
     **password**:"password",
-4. Install this repository via pip
+4. Install this repository via PyPi
     ```sh
-    $ pip install git+git://github.com/trevormccormick/adobe-aam.git
+    $ pip install aam-api
     ```
 5. Use the Client method to log in to AAM.
     ```py
