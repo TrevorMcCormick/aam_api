@@ -1,6 +1,0 @@
-setup.py
-aam_api.egg-info/PKG-INFO
-aam_api.egg-info/SOURCES.txt
-aam_api.egg-info/dependency_links.txt
-aam_api.egg-info/requires.txt
-aam_api.egg-info/top_level.txt

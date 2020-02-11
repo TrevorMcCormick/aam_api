@@ -1,3 +1,14 @@
+import requests
+import json
+import base64 as base64
+import pandas as pd
+import xlrd
+from aam_api.helpers.apiError import APIError
+from aam_api.helpers.apiRequest import apiRequest
+from aam_api.helpers.bytesToJson import bytesToJson
+from aam_api.helpers.flattenJson import flattenJson
+from aam_api.helpers.toDataFrame import toDataFrame
+
 class DerivedSignals:
     @classmethod
     def get_many(cls,
@@ -43,6 +54,7 @@ class DerivedSignals:
                Returns:
                    String with derived signals create success and # of derived signals created.
             """
+            # Check document for validity
             try:
                 derivedSignals = toDataFrame(derivedSignals)
             except:
@@ -59,19 +71,31 @@ class DerivedSignals:
                     raise ValueError('Derived Signals column names are incorrect')
             except (ValueError):
                 raise
-            successful_signals = 0
-            for i in range(0, len(derivedSignals)):
+
+            # Create report template
+            report_cols = ['sourceKey', 'sourceValue', 'targetKey', 'targetValue', 'status_code', 'response']
+            report_df = pd.DataFrame(columns=report_cols)
+
+            # Post signals
+            for i in log_progress(range(0, len(derivedSignals))):
                 data = {
-                        "sourceKey":derivedSignals.loc[i]['sourceKey']),
+                        "sourceKey":derivedSignals.loc[i]['sourceKey'],
                         "sourceValue":derivedSignals.loc[i]['sourceValue'],
-                        "targetKey":derivedSignals.loc[i]['targetKey']),
+                        "targetKey":derivedSignals.loc[i]['targetKey'],
                         "targetValue":derivedSignals.loc[i]['targetValue']
                         }
                 data = json.dumps(data)
                 response = apiRequest(call="signals/derived", method="post", data=data)
-                status = response.status_code
-                if status != 201:
-                    raise APIError(status)
-                elif status == 201:
-                    successful_signals += 1
-            return('Created {0} derived signals.'.format(successful_signals))
+                status_code = response.status_code
+                status_response = response.content
+
+                # Create report
+                cols = {}
+                cols['sourceKey'] = derivedSignals.loc[i]['sourceKey']
+                cols['sourceValue'] = derivedSignals.loc[i]['sourceValue']
+                cols['targetKey'] = derivedSignals.loc[i]['targetKey']
+                cols['targetValue'] = derivedSignals.loc[i]['targetValue']
+                cols['status_code'] = status_code
+                cols['response'] = status_response
+                report_df = report_df.append(cols, ignore_index=True)
+            return(report_df)

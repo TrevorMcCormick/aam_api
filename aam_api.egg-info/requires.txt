@@ -1,3 +1,0 @@
-pandas>=0.24
-xlrd>=1
-requests>=2

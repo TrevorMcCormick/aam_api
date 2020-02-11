@@ -1,6 +1,6 @@
-# Adobe-AAM
+# AAM_API
 
-#### Update 12.18.19 - v1.0 stable!
+#### Updated 02.11.2020 - stable
 
 This is a Python wrapper for the Adobe Audience Manager API.
 
@@ -8,7 +8,6 @@ To get started:
 1. Request a non-Marketing Cloud user account from your Adobe consultant
 2. Obtain your enterprise Client ID and Client Secret from your Adobe consultant
 3. Create a json file containing your AAM credentials:  
-
     **clientID**: "clientID",  
 
     **clientSecret**:"clientSecret",  
@@ -20,12 +19,17 @@ To get started:
     **password**:"password",
 4. Install this repository via PyPi
     ```sh
-    $ pip install aam-api
+    $ pip install aam_api
     ```
-5. Use the Client method to log in to AAM.
+5. Import aam_api and provide path to credentials file.
     ```py
-    Client.from_json('aam_credentials.json')
+    from aam_api import *
     ```
+    Provide the path to your AAM credentials file.
+    Note-- if you save your file as "aam_credentials.json" in the folder you launched Python, you can skip this step.
+
+#### [Examples are here!](https://github.com/TrevorMcCormick/aam-api/blob/master/examples.md)
+
 ### Current coverage includes:
 * Traits
 * TraitFolders
@@ -41,8 +45,8 @@ To get started:
 - ~~Traits to Segment ID~~
 - ~~Traits to All segments~~
 
-#### [Examples are here!](https://github.com/TrevorMcCormick/adobe-aam/blob/master/examples.md)
-
 ###  Planned Features
+* Users
+* Update methods
 * Custom reporting
 * d3 dashboard

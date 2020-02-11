@@ -37,7 +37,6 @@ class Client:
     def __repr__(self):
         if self.response.status_code == 200:
             status = "Login Success. Token granted."
-            global token
             token = self.response.json()['access_token']
         else:
             status = self.response.content
