@@ -21,7 +21,7 @@ class SegmentFolders:
                     df of all folderIds, parentFolderIds, and paths to which the AAM API user has READ access.
             """
             data = {}
-            response = apiRequest(call="folders/traits", method="get", data=data)
+            response = apiRequest(call="folders/segments", method="get", data=data)
             status = response.status_code
             if status != 200:
                 raise APIError(status)
