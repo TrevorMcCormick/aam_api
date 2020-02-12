@@ -175,6 +175,18 @@ class Traits:
                         "traitType":traits.loc[i]['traitType'],
                         "name":traits.loc[i]['name']}
                 data = json.dumps(data)
+                #quick fix for line 193
+                ########
+                global token
+                try:
+                    token = Client.from_json("aam_credentials.json").response.json()['access_token']
+                except:
+                    path = input("Path to aam credentials:  ")
+                    try:
+                        token = Client.from_json(path).response.json()['access_token']
+                    except:
+                        raise InputError("Invalid Path", "Credentials are invalid")
+                #######
                 header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
                 response = requests.post('https://api.demdex.com/v1/traits/', headers=header, data=data)
                 #figure out why line below does not work
