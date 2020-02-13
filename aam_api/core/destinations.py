@@ -8,6 +8,8 @@ from aam_api.helpers.apiRequest import apiRequest
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
+from aam_api.helpers.getUsers import getUsers
+from aam_api.core.users import Users
 
 class Destinations:
     @classmethod
@@ -21,7 +23,8 @@ class Destinations:
             pid=None,
             restrictType=None,
             includeMasterDataSourceIdType=None,
-            includeMetrics=None):
+            includeMetrics=None,
+            includeUsers=None):
             """
                 Get multiple AAM Destinations.
                 Args:
@@ -56,6 +59,8 @@ class Destinations:
                 df = pd.DataFrame(response.json())
                 df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
                 df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
+                if includeUsers:
+                    df = getUsers(df)
                 if limitCols:
                     df = df[['name', 'description', 'destinationType',
                          'sid', 'destinationId', 'dataSourceId',
@@ -94,6 +99,8 @@ class Destinations:
                 df.transpose()
                 df.at['createTime', 0] = pd.to_datetime(df.at['createTime', 0], unit='ms')
                 df.at['updateTime', 0] = pd.to_datetime(df.at['updateTime', 0], unit='ms')
+                if includeUsers:
+                    df = getUsers(df)
                 if limitCols:
                     df = df.loc[ ['name', 'description', 'destinationType',
                              'destinationId', 'dataSourceId',
