@@ -10,6 +10,7 @@ from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
 from aam_api.helpers.getUsers import getUsers
 from aam_api.core.users import Users
+from aam_api.helpers.destinationSegments import segmentsMappedToDestination
 
 class Destinations:
     @classmethod
@@ -24,7 +25,8 @@ class Destinations:
             restrictType=None,
             includeMasterDataSourceIdType=None,
             includeMetrics=None,
-            includeUsers=None):
+            includeUsers=None,
+            includeMappings=None):
             """
                 Get multiple AAM Destinations.
                 Args:
@@ -38,6 +40,7 @@ class Destinations:
                     restrictType: (str) Filter by destinationType column.
                     includeMasterDataSourceIdType: (bool) True includes masterDataSource columns.
                     includeMetrics: (bool) Includes includes AddressableAudienceMetrics column.
+                    includeMappings: (bool) Includes segment mappings to destinationId.
                 Returns:
                     df of all destinations to which the AAM API user has READ access.
             """
@@ -59,6 +62,13 @@ class Destinations:
                 df = pd.DataFrame(response.json())
                 df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
                 df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
+                if includeMappings:
+                    df['segmentMappings'] = None
+                    try:
+                        for d in len(0, range(df)):
+                            df.iloc[d]['segmentMappings'] = segmentsMappedToDestination(df.iloc[d]['destinationId'])
+                    except:
+                        pass
                 if includeUsers:
                     df = getUsers(df)
                 if limitCols:
@@ -73,7 +83,8 @@ class Destinations:
                 limitCols=None,
                 includeMappings=None,
                 includeMetrics=None,
-                includeMasterDataSourceIdType=None
+                includeMasterDataSourceIdType=None,
+                includeUsers=None
                ):
             """
                 Get one AAM Destination.
@@ -99,6 +110,13 @@ class Destinations:
                 df.transpose()
                 df.at['createTime', 0] = pd.to_datetime(df.at['createTime', 0], unit='ms')
                 df.at['updateTime', 0] = pd.to_datetime(df.at['updateTime', 0], unit='ms')
+                if includeMappings:
+                    df['segmentMappings'] = None
+                    try:
+                        for d in len(0, range(df)):
+                            df.iloc[d]['segmentMappings'] = segmentsMappedToDestination(df.iloc[d]['destinationId'])
+                    except:
+                        pass
                 if includeUsers:
                     df = getUsers(df)
                 if limitCols:
