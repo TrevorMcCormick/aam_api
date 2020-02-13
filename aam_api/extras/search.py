@@ -1,3 +1,5 @@
+import pandas as import pd
+
 def search(df, column, type, keywords):
     if type=="any":
         result = df[column].apply(lambda sentence: any(keyword in sentence for keyword in keywords))
