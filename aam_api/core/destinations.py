@@ -65,7 +65,7 @@ class Destinations:
                 if includeMappings:
                     df['segmentMappings'] = None
                     try:
-                        for d in len(0, range(df)):
+                        for d in range(0, len(df)):
                             df.iloc[d]['segmentMappings'] = segmentsMappedToDestination(df.iloc[d]['destinationId'])
                     except:
                         pass
