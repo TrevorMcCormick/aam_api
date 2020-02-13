@@ -14,10 +14,10 @@ def getUsers(df):
     df.rename(columns={'firstName': 'create_firstName',
                            'lastName': 'create_lastName',
                            'email': 'create_email'}, inplace=True)
-    df = new_df.drop('uid', axis=1)
+    df = df.drop('uid', axis=1)
     df = pd.merge(df,users.drop('pid', axis=1),left_on="upUID", right_on="uid")
     df.rename(columns={'firstName': 'update_firstName',
                            'lastName': 'update_lastName',
                            'email': 'update_email'}, inplace=True)
-    df = new_df.drop('uid', axis=1)
+    df = df.drop('uid', axis=1)
     return(df)
