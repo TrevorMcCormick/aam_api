@@ -1,4 +1,4 @@
-import pandas as import pd
+import pandas as pd
 
 def search(df, column, type, keywords):
     if type=="any":
