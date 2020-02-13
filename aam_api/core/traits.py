@@ -9,6 +9,8 @@ from aam_api.helpers.apiRequest import apiRequest
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
+from aam_api.helpers.getUsers import getUsers
+from aam_api.core.users import Users
 
 class Traits:
     @classmethod
@@ -25,7 +27,8 @@ class Traits:
             dataSourceId=None,
             pid=None,
             type=None,
-            includeDetails=None
+            includeDetails=None,
+            includeUsers=None
             ):
             """
                 Get AAM Traits
@@ -42,7 +45,8 @@ class Traits:
                     dataSourceId: (id) Filter by data source ID.
                     pid: (int) Your AAM enterprise ID.
                     type: (int) Filter by specific trait type value.
-                    includeDetails: (bool) Includes varius detail columns such as ttl and traitRule.
+                    includeDetails: (bool) Includes various detail columns such as ttl and traitRule.
+                    includeUsers: (bool) Translates UIDs to firstname, lastname, and email address.
                 Returns:
                     df of traits to which the AAM API user has READ access.
             """
@@ -57,7 +61,8 @@ class Traits:
                     "dataSourceId":dataSourceId,
                     "pid":pid,
                     "type":type,
-                    "includeDetails":includeDetails
+                    "includeDetails":includeDetails,
+                    "includeUsers": includeUsers
                     }
             response = apiRequest(call="traits", method="get", data=data)
             status = response.status_code
@@ -67,6 +72,8 @@ class Traits:
                 df = pd.DataFrame(response.json())
                 df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
                 df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
+                if includeUsers:
+                    df = getUsers(df)
                 if limitcols:
                     df = df[['name', 'description', 'traitType',
                              'sid', 'folderId', 'dataSourceId',
@@ -100,6 +107,8 @@ class Traits:
                 df.transpose()
                 df.at['createTime', 0] = pd.to_datetime(df.at['createTime', 0], unit='ms')
                 df.at['updateTime', 0] = pd.to_datetime(df.at['updateTime', 0], unit='ms')
+                if includeUsers:
+                    df = getUsers(df)
                 if limitCols:
                     df = df.loc[ ['name', 'description', 'sid',
                              'folderId', 'dataSourceId',
