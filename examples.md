@@ -13,6 +13,7 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Traits | Get Trait Limits | ```Traits.get_limits()```|
 | Traits | Create Many Traits | ```Traits.create(file_path)```|
 | Traits | Delete Many Traits | ```Traits.delete(file_path)```|
+| Traits | Update Many Traits | ```Traits.update(file_path)```|
 | TraitFolders | Get All Trait Folders | ```TraitFolders.get_many()```|
 | TraitFolders | Get One Trait Folders | ```TraitFolders.get_one(folderId)```|
 | TraitFolders | Search Trait Folders by Keyword | ```TraitFolders.search(column="name", type="all", keywords=["term1", "term2"])```|
@@ -31,9 +32,4 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Destinations | Create Many Destinations | ```Destinations.create()```|
 | Derived Signals | Get All Derived Signals | ```DerivedSignals.get_many()```|
 | Derived Signals | Create Many Derived Signals | ```DerivedSignals.create()```|  
-
-
-| Bonus Classes |   Action   |   Code   |
-|:---------|------------|:---------|
-| Mapper | Map Segments to Destination ID |```Mapper.segmentsToDestination(destinationId) ``` |
-| Mapper | Map Segments to All Destinations |```Mapper.segmentsToDestinations() ``` |
+| Users | Get All Users | ```Users.get_many()```|  

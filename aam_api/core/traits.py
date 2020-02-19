@@ -288,3 +288,48 @@ class Traits:
                 result = traits.name.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
                 df = traits[result]
             return df
+    @classmethod
+    def update(cls,traits):
+            """
+               Updates AAM Trait.
+               Args:
+                   traits: (Excel or csv) List of traits to update.
+               Returns:
+                   String with trait update success and # of traits updated.
+            """
+            try:
+                traits = toDataFrame(traits)
+            except:
+                print("Failed to transform traits to dataframe.")
+                raise
+            if 'sid' not in list(traits):
+                raise ValueError('Traits column names are incorrect')
+            updates = traits.drop('sid', 1)
+            successful_traits += 0
+            for i in range(0, len(updates)):
+                data = updates.iloc[i].to_dict()
+                data = json.dumps(data)
+                sid = traits.iloc[i]['sid']
+                #quick fix for line 193
+                ########
+                global token
+                try:
+                    token = Client.from_json("aam_credentials.json").response.json()['access_token']
+                except:
+                    path = input("Path to aam credentials:  ")
+                    try:
+                        token = Client.from_json(path).response.json()['access_token']
+                    except:
+                        raise InputError("Invalid Path", "Credentials are invalid")
+                #######
+                header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
+                response = requests.put('https://api.demdex.com/v1/traits/{}'.format(sid), headers=header, data=data)
+                #figure out why line below does not work
+                #response = apiRequest(call="traits", method="post", data=data)
+                status = response.status_code
+                if status != 200:
+                    raise APIError(status)
+                elif status == 200:
+                    print('Updated trait: {0}'.format(sid))
+                    successful_traits += 1
+            return('Updated {0} traits.'.format(successful_traits))

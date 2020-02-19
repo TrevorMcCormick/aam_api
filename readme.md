@@ -37,16 +37,14 @@ To get started:
 * SegmentFolders
 * Destinations
 * DerivedSignals
+* Users
 
 ### Current extra features include:
 * Mapper
-- Segments to Destination ID
-- Segments to All destinations
-- ~~Traits to Segment ID~~
-- ~~Traits to All segments~~
+- Segments mapped to Destination ID
+- Traits mapped to Segment ID
+- Traits mapped to other Trait IDs
 
 ###  Planned Features
-* Users
-* Update methods
+* Update methods for segments/destinations
 * Custom reporting
-* d3 dashboard

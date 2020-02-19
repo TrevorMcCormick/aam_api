@@ -67,7 +67,7 @@ class Destinations:
                     for index, row in df.iterrows():
                         destinationId = row['destinationId']
                         segments = segmentsMappedToDestination(destinationId)
-                        df.at[index, 'segmentMappings'] = list(segments)
+                        df.at[index, 'segmentMappings'] = segments
                     df["segmentMappings"] = segmentsMappedToDestination(df['destinationId'])
                 if includeUsers:
                     df = getUsers(df)
