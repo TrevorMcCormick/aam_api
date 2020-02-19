@@ -63,6 +63,11 @@ class Destinations:
                 df['createTime'] = pd.to_datetime(df['createTime'], unit='ms')
                 df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
                 if includeMappings:
+                    df["segmentMappings"] = None
+                    for index, row in df.iterrows():
+                        destinationId = row['destinationId']
+                        segments = segmentsMappedToDestination(destinationId)
+                        df.at[index, 'segmentMappings'] = list(segments)
                     df["segmentMappings"] = segmentsMappedToDestination(df['destinationId'])
                 if includeUsers:
                     df = getUsers(df)
@@ -106,7 +111,11 @@ class Destinations:
                 df.at['createTime', 0] = pd.to_datetime(df.at['createTime', 0], unit='ms')
                 df.at['updateTime', 0] = pd.to_datetime(df.at['updateTime', 0], unit='ms')
                 if includeMappings:
-                    df["segmentMappings"] = segmentsMappedToDestination(df['destinationId'])
+                    df["segmentMappings"] = None
+                    for index, row in df.iterrows():
+                        destinationId = row['destinationId']
+                        segments = segmentsMappedToDestination(destinationId)
+                        df.at[index, 'segmentMappings'] = list(segments)
                 if includeUsers:
                     df = getUsers(df)
                 if limitCols:

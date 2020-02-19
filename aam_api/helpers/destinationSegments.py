@@ -7,7 +7,7 @@ import xlrd
 from aam_api.helpers.apiRequest import apiRequest
 from aam_api.helpers.apiError import APIError
 
-def segmentsMappedToDestination(cls, destinationId):
+def segmentsMappedToDestination(destinationId):
         """
         Get all segments mapped to an AAM Destination.
         Args:
@@ -22,5 +22,6 @@ def segmentsMappedToDestination(cls, destinationId):
             raise APIError(status)
         else:
             df = pd.DataFrame(response.json())
-            df = df[["sid"]]
-            return df
+            df = df[["sid"]].values.tolist()
+            lst = [y for x in df for y in x]
+            return lst
