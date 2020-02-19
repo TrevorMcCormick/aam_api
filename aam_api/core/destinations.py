@@ -68,7 +68,6 @@ class Destinations:
                         destinationId = row['destinationId']
                         segments = segmentsMappedToDestination(destinationId)
                         df.at[index, 'segmentMappings'] = segments
-                    df["segmentMappings"] = segmentsMappedToDestination(df['destinationId'])
                 if includeUsers:
                     df = getUsers(df)
                 if limitCols:
