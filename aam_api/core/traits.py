@@ -305,7 +305,7 @@ class Traits:
             if 'sid' not in list(traits):
                 raise ValueError('Traits column names are incorrect')
             updates = traits.drop('sid', 1)
-            successful_traits += 0
+            successful_traits = 0
             for i in range(0, len(updates)):
                 data = updates.iloc[i].to_dict()
                 data = json.dumps(data)
