@@ -19,7 +19,10 @@ def segmentsMappedToDestination(destinationId):
         response = apiRequest(call="destinations/{0}/mappings".format(destinationId), method="get", data=data)
         status = response.status_code
         if status != 200:
-            raise APIError(status)
+            if status == 404:
+                lst = None
+            else:
+                raise APIError(status)
         else:
             df = pd.DataFrame(response.json())
             try:
