@@ -12,6 +12,9 @@ from aam_api.helpers.toDataFrame import toDataFrame
 from aam_api.helpers.getUsers import getUsers
 from aam_api.core.users import Users
 from aam_api.helpers.traitSkeleton import traitSkeleton
+from aam_api.helpers.inSegments import inSegments
+from aam_api.core.segments import Segments
+from aam_api.helpers.inSegments import inSegmentsBool
 
 class Traits:
     @classmethod
@@ -30,7 +33,8 @@ class Traits:
             type=None,
             includeDetails=None,
             includeUsers=None,
-            includeTraitSkeleton=None
+            includeTraitSkeleton=None,
+            includeSegmentsBool=None
             ):
             """
                 Get AAM Traits
@@ -50,6 +54,7 @@ class Traits:
                     includeDetails: (bool) Includes various detail columns such as ttl and traitRule.
                     includeUsers: (bool) Translates UIDs to firstname, lastname, and email address.
                     includeTraitSkeleton: (bool) Includes list of trait IDs that make up a trait.
+                    includeSegmentsBool: (bool) Includes column indicating if trait is part of a segment.
                 Returns:
                     df of traits to which the AAM API user has READ access.
             """
@@ -79,6 +84,10 @@ class Traits:
                     df = getUsers(df)
                 if includeTraitSkeleton:
                     df = includeTraitSkeleton(df)
+                if includeSegmentsBool:
+                    segments = Segments.get_many()
+                    segments = segmentTraits(segments)
+                    df = inSegmentsBool(df, segments)
                 if limitcols:
                     df = df[['name', 'description', 'traitType',
                              'sid', 'folderId', 'dataSourceId',
@@ -92,7 +101,8 @@ class Traits:
                 includeExprTree=None,
                 includeMetrics=None,
                 includeUsers=None,
-                includeTraitSkeleton=None):
+                includeTraitSkeleton=None,
+                includeInSegments=None):
             """
                 Get AAM Traits
                 Args:
@@ -101,6 +111,7 @@ class Traits:
                     includeMetrics: (bool) Includes many metrics columns by trait.
                     includeUsers: (bool) Translates UIDs to firstname, lastname, and email address.
                     includeTraitSkeleton: (bool) Includes list of trait IDs that make up a trait.
+                    includeInSegments: (bool) Includes segments trait ID is included in.
                 Returns:
                     Transposed df of one trait to which the AAM API user has READ access.
             """
@@ -120,6 +131,10 @@ class Traits:
                     df = getUsers(df)
                 if includeTraitSkeleton:
                     df = includeTraitSkeleton(df)
+                if includeInSegments:
+                    df['inSegments'] = None
+                    for index, row in df.iterrows():
+                        df.at[index, "inSegments"] = inSegments(df['sid'])
                 if limitCols:
                     df = df.loc[ ['name', 'description', 'sid',
                              'folderId', 'dataSourceId',
