@@ -13,6 +13,7 @@ from aam_api.helpers.getUsers import getUsers
 from aam_api.core.users import Users
 from aam_api.helpers.traitSkeleton import traitSkeleton
 from aam_api.helpers.inSegments import inSegments
+from aam_api.helpers.segmentTraits import segmentTraits
 from aam_api.core.segments import Segments
 from aam_api.helpers.inSegments import inSegmentsBool
 
@@ -83,7 +84,7 @@ class Traits:
                 if includeUsers:
                     df = getUsers(df)
                 if includeTraitSkeleton:
-                    df = includeTraitSkeleton(df)
+                    df = traitSkeleton(df)
                 if includeSegmentsBool:
                     segments = Segments.get_many()
                     segments = segmentTraits(segments)
@@ -130,7 +131,7 @@ class Traits:
                 if includeUsers:
                     df = getUsers(df)
                 if includeTraitSkeleton:
-                    df = includeTraitSkeleton(df)
+                    df = traitSkeleton(df)
                 if includeInSegments:
                     df['inSegments'] = None
                     for index, row in df.iterrows():
