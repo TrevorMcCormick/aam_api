@@ -11,6 +11,7 @@ from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
 from aam_api.helpers.getUsers import getUsers
 from aam_api.core.users import Users
+from aam_api.helpers.segmentTraits import segmentTraits
 
 class Segments:
     @classmethod
