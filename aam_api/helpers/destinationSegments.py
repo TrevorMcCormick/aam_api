@@ -25,6 +25,6 @@ def segmentsMappedToDestination(destinationId):
             try:
                 df = df[["sid"]].values.tolist()
                 lst = [y for x in df for y in x]
-            else:
+            except:
                 lst = None
             return lst
