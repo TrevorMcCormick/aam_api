@@ -22,6 +22,9 @@ def segmentsMappedToDestination(destinationId):
             raise APIError(status)
         else:
             df = pd.DataFrame(response.json())
-            df = df[["sid"]].values.tolist()
-            lst = [y for x in df for y in x]
+            try:
+                df = df[["sid"]].values.tolist()
+                lst = [y for x in df for y in x]
+            else:
+                lst = None
             return lst
