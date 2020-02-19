@@ -11,6 +11,7 @@ from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
 from aam_api.helpers.getUsers import getUsers
 from aam_api.core.users import Users
+from aam_api.helpers.traitSkeleton import traitSkeleton
 
 class Traits:
     @classmethod
@@ -28,7 +29,8 @@ class Traits:
             pid=None,
             type=None,
             includeDetails=None,
-            includeUsers=None
+            includeUsers=None,
+            includeTraitSkeleton=None
             ):
             """
                 Get AAM Traits
@@ -47,6 +49,7 @@ class Traits:
                     type: (int) Filter by specific trait type value.
                     includeDetails: (bool) Includes various detail columns such as ttl and traitRule.
                     includeUsers: (bool) Translates UIDs to firstname, lastname, and email address.
+                    includeTraitSkeleton: (bool) Includes list of trait IDs that make up a trait.
                 Returns:
                     df of traits to which the AAM API user has READ access.
             """
@@ -74,6 +77,8 @@ class Traits:
                 df['updateTime'] = pd.to_datetime(df['updateTime'], unit='ms')
                 if includeUsers:
                     df = getUsers(df)
+                if includeTraitSkeleton:
+                    df = includeTraitSkeleton(df)
                 if limitcols:
                     df = df[['name', 'description', 'traitType',
                              'sid', 'folderId', 'dataSourceId',
@@ -85,13 +90,17 @@ class Traits:
                 sid,
                 limitCols=None,
                 includeExprTree=None,
-                includeMetrics=None):
+                includeMetrics=None,
+                includeUsers=None,
+                includeTraitSkeleton=None):
             """
                 Get AAM Traits
                 Args:
                     limitCols: (bool) List of df columns to subset.
                     includeExprTree: (bool) Includes traits, mappableTraits, codeViewOnly, and expressionTree columns.
                     includeMetrics: (bool) Includes many metrics columns by trait.
+                    includeUsers: (bool) Translates UIDs to firstname, lastname, and email address.
+                    includeTraitSkeleton: (bool) Includes list of trait IDs that make up a trait.
                 Returns:
                     Transposed df of one trait to which the AAM API user has READ access.
             """
@@ -109,6 +118,8 @@ class Traits:
                 df.at['updateTime', 0] = pd.to_datetime(df.at['updateTime', 0], unit='ms')
                 if includeUsers:
                     df = getUsers(df)
+                if includeTraitSkeleton:
+                    df = includeTraitSkeleton(df)
                 if limitCols:
                     df = df.loc[ ['name', 'description', 'sid',
                              'folderId', 'dataSourceId',
