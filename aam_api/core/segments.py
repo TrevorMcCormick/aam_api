@@ -27,7 +27,8 @@ class Segments:
             pid=None,
             includeTraitDataSourceIds=None,
             includeMetrics=None,
-            includeUsers=None):
+            includeUsers=None,
+            includeMappedTraits=None):
             """
                 Get multiple AAM Segments.
                 Args:
@@ -43,6 +44,7 @@ class Segments:
                     pid: (int) Your AAM enterprise ID.
                     includeTraitDataSourceIds: (bool) Includes includeTraitDataSourceIds column.
                     includeMetrics: (bool) Includes many metrics columns by segment.
+                    includeMappedTraits: (bool) Include list of traits included in segment.
                 Returns:
                     df of all segments to which the AAM API user has READ access.
             """
@@ -73,6 +75,8 @@ class Segments:
                     df = df[['name', 'description',
                          'sid', 'folderId', 'dataSourceId',
                          'createTime', 'updateTime']]
+                if includeMappedTraits:
+                    df = segmentTraits(df)
                 return df
 
     @classmethod
@@ -82,7 +86,8 @@ class Segments:
                 includeMetrics=None,
                 includeExprTree=None,
                 includeTraitDataSourceIds=None,
-                includeInUseStatus=None
+                includeInUseStatus=None,
+                includeMappedTraits=None
                ):
             """
                Get multiple AAM Segments.
@@ -93,6 +98,7 @@ class Segments:
                    includeExprTree: (bool) Includes traits, mappableTraits, codeViewOnly, and expressionTree columns.
                    includeTraitDataSourceIds: (bool) Includes includeTraitDataSourceIds column.
                    includeInUseStatus: (bool) Includes inUse column.
+                   includeMappedTraits: (bool) Include list of traits included in segment.
                Returns:
                    Transposed df of one segment to which the AAM API user has READ access.
             """
@@ -116,6 +122,8 @@ class Segments:
                     df = df.loc[ ['name', 'description', 'sid',
                              'folderId', 'dataSourceId',
                              'createTime', 'updateTime'] , : ]
+                if includeMappedTraits:
+                    df = segmentTraits(df)
                 return df
 
     @classmethod
