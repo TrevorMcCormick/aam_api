@@ -211,7 +211,7 @@ class Traits:
                         "traitType":traits.loc[i]['traitType'],
                         "name":traits.loc[i]['name']}
                 data = json.dumps(data)
-                #quick fix for line 193
+                #quick fix
                 ########
                 global token
                 try:
@@ -310,7 +310,22 @@ class Traits:
                 data = updates.iloc[i].to_dict()
                 data = json.dumps(data)
                 sid = traits.iloc[i]['sid']
-                response = apiRequest(call="traits/{}".format(sid), method="put", data=data)
+                #quick fix
+                ########
+                global token
+                try:
+                    token = Client.from_json("aam_credentials.json").response.json()['access_token']
+                except:
+                    path = input("Path to aam credentials:  ")
+                    try:
+                        token = Client.from_json(path).response.json()['access_token']
+                    except:
+                        raise InputError("Invalid Path", "Credentials are invalid")
+                #######
+                header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
+                response = requests.put('https://api.demdex.com/v1/traits/{0}'.format(sid), headers=header, data=data)
+                #figure out why line below does not work
+                #response = apiRequest(call="traits", method="post", data=data)
                 status = response.status_code
                 if status != 200:
                     raise APIError(status)
