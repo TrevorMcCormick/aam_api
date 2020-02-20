@@ -24,6 +24,7 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Segments | Get Segment Mappings | ```Segments.get_one_destinations(sid)```|
 | Segments | Create Many Segments | ```Segments.create()```|
 | Segments | Delete Many Segments | ```Segments.delete()```|
+| Segments | Update Many Segments | ```Segments.update(file_path)```|
 | SegmentFolders | Get All Segment Folders | ```SegmentFolders.get_many()```|
 | SegmentFolders | Get One Segment Folders | ```SegmentFolders.get_one(folderId)```|
 | SegmentFolders | Search Segment Folders by Keyword | ```SegmentFolders.search("all", ["term1", "term2"])```|
@@ -33,3 +34,21 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Derived Signals | Get All Derived Signals | ```DerivedSignals.get_many()```|
 | Derived Signals | Create Many Derived Signals | ```DerivedSignals.create()```|  
 | Users | Get All Users | ```Users.get_many()```|  
+
+
+#### Specific Examples
+Overall Trait Create Count by User
+```
+traits = Traits.get_many(includeUsers=True)
+traits.groupby(['create_email']).count()['sid'].sort_values(ascending=False)
+```
+
+Traits that are over a month old and have not registered any Lifetime Trait Realizations
+```
+traits[(traits['createTime'] < thirty_days_ago) & (traits['uniquesLifetime'] == 0)]
+```
+
+Get list of possible arguments and descriptions for arguments of a function
+```
+help(Traits.get_many)
+```

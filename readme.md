@@ -1,6 +1,6 @@
 # AAM_API
 
-#### Updated 02.11.2020 - stable
+#### Updated 02.20.2020 - stable
 
 This is a Python wrapper for the Adobe Audience Manager API.
 
@@ -28,23 +28,22 @@ To get started:
     Provide the path to your AAM credentials file.
     Note-- if you save your file as "aam_credentials.json" in the folder you launched Python, you can skip this step.
 
-#### [Examples are here!](https://github.com/TrevorMcCormick/aam-api/blob/master/examples.md)
+#### [Examples are here!](https://github.com/TrevorMcCormick/aam_api/blob/master/examples.md)
 
-### Current coverage includes:
-* Traits
-* TraitFolders
-* Segments
-* SegmentFolders
-* Destinations
-* DerivedSignals
-* Users
+### Current coverage [Create, Read, Update, Delete] includes:
+* Traits [CRUD]
+* TraitFolders [R]
+* Segments [CRUD]
+* SegmentFolders [R]
+* Destinations [CRD]
+* DerivedSignals [CR]
+* Users [R]
 
-### Current extra features include:
+### Current extra features [Read] include:
 * Mapper
 - Segments mapped to Destination ID
 - Traits mapped to Segment ID
 - Traits mapped to other Trait IDs
 
 ###  Planned Features
-* Update methods for segments/destinations
-* Custom reporting
+* Custom reporting and data extract templates
