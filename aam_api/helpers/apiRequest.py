@@ -29,6 +29,6 @@ except:
 
 def apiRequest(call, method, data=""):
     url = "https://api.demdex.com/v1/{}/".format(call)
-    header =  {'Authorization' : 'Bearer '+token,'accept': 'application/json'}
+    header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
     response = requests.request(method, url, headers=header,params=data)
     return(response)
