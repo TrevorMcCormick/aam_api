@@ -6,6 +6,7 @@ import xlrd
 
 from aam_api.helpers.apiError import APIError
 from aam_api.helpers.apiRequest import apiRequest
+from aam_api.helpers.apiRequest import apiRequestUpdate
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
@@ -296,7 +297,7 @@ class Traits:
                 data = updates.iloc[i].to_dict()
                 data = json.dumps(data)
                 sid = traits.iloc[i]['sid']
-                response = apiRequest(call="traits/{0}".format(sid), method="put", data=data)
+                response = apiRequestUpdate(call="traits/{0}".format(sid), method="put", data=data)
                 status = response.status_code
                 if status != 200:
                     raise APIError(status)

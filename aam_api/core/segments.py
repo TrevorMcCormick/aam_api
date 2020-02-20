@@ -6,6 +6,7 @@ import xlrd
 
 from aam_api.helpers.apiError import APIError
 from aam_api.helpers.apiRequest import apiRequest
+from aam_api.helpers.apiRequest import apiRequestUpdate
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
@@ -244,3 +245,33 @@ class Segments:
                 result = segments.name.apply(lambda sentence: all(keyword in sentence for keyword in keywords))
                 df = segments[result]
             return df
+    @classmethod
+    def update(cls,segments):
+            """
+               Updates AAM Segment.
+               Args:
+                   segments: (Excel or csv) List of segments to update.
+               Returns:
+                   String with segment update success and # of segments updated.
+            """
+            try:
+                segments = toDataFrame(segments)
+            except:
+                print("Failed to transform segments to dataframe.")
+                raise
+            if 'sid' not in list(segments):
+                raise ValueError('Segments column names are incorrect')
+            updates = segments.drop('sid', 1)
+            successful_segments = 0
+            for i in range(0, len(updates)):
+                data = updates.iloc[i].to_dict()
+                data = json.dumps(data)
+                sid = segments.iloc[i]['sid']
+                response = apiRequestUpdate(call="segments/{0}".format(sid), method="put", data=data)
+                status = response.status_code
+                if status != 200:
+                    raise APIError(status)
+                elif status == 200:
+                    print('Updated segment: {0}'.format(sid))
+                    successful_segments += 1
+            return('Updated {0} segments.'.format(successful_segments))
