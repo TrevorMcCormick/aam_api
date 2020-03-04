@@ -25,10 +25,12 @@ from aam_api.core.segments import Segments
 from aam_api.core.traitFolders import TraitFolders
 from aam_api.core.traits import Traits
 from aam_api.core.users import Users
+from aam_api.core.reports import Reports
 from aam_api.extras.search import search
 from aam_api.helpers.apiError import APIError
 from aam_api.helpers.apiRequest import apiRequest
 from aam_api.helpers.apiRequest import apiRequestUpdate
+from aam_api.helpers.apiRequest import apiReport
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame

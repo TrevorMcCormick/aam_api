@@ -33,8 +33,14 @@ def apiRequest(call, method, data=""):
     response = requests.request(method, url, headers=header,params=data)
     return(response)
 
-def apiRequestUpdate (call, method, data=""):
+def apiRequestUpdate(call, method, data=""):
     url = "https://bank.demdex.com/v1/{}/".format(call)
+    header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
+    response = requests.request(method, url, headers=header,params=data)
+    return(response)
+
+def apiReport(call, method, data=""):
+    url = "https://bank.demdex.com/portal/api/v1/reports/".format(call)
     header =  {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json',"Content-Type": "application/json"}
     response = requests.request(method, url, headers=header,params=data)
     return(response)
