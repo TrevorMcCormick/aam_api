@@ -41,6 +41,6 @@ def apiRequestUpdate(call, method, data=""):
 
 def apiTraitsTrend(call, method, data=""):
     url = "https://api.demdex.com/v1/reports/traits-trend".format(call)
-    header =  {'Authorization' : 'Bearer {}'.format(token),'accept': '*/*',"Content-Type": "application/json", 'accept-encoding':"Accept-Encoding: gzip, deflate, br"}
+    header =  {'AAM-CSRF-Token:' : '{0}'.format(token),'accept': '*/*',"Content-Type": "application/json", 'accept-encoding':"Accept-Encoding: gzip, deflate, br"}
     response = requests.request(method, url, headers=header,params=data)
     return(response)
