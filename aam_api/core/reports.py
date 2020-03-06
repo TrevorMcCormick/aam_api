@@ -8,7 +8,7 @@ import time
 from aam_api.helpers.apiError import APIError
 from aam_api.helpers.apiRequest import apiRequest
 from aam_api.helpers.apiRequest import apiRequestUpdate
-from aam_api.helpers.apiRequest import apiReport
+from aam_api.helpers.apiRequest import apiTraitsTrend
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
@@ -24,13 +24,15 @@ from aam_api.core.client import Client
 class Reports:
     @classmethod
     def trait_trend(cls,traitId, startDate, endDate, breakdown="day"):
+        pattern = "%Y-%m-%d"
         startDate_epoch = int(time.mktime(time.strptime(startDate, pattern)))
         endDate_epoch = int(time.mktime(time.strptime(endDate, pattern)))
         data = {"startDate":startDate_epoch,
                 "endDate":endDate_epoch,
                 "interval": "1D",
                 "metricsType": "DEVICE"}
-        response = apiReport(call="trait-trend/{0}".format(traitId), method="get", data=data)
+        response = apiReport(call="traits-trend/{0}".format(traitId), method="get", data=data)
+        status = response.status_code
         if status != 200:
             raise APIError(status)
         else:
