@@ -4,11 +4,11 @@ import base64 as base64
 import pandas as pd
 import xlrd
 import time
+from datetime import datetime, timedelta
 
 from aam_api.helpers.apiError import APIError
 from aam_api.helpers.apiRequest import apiRequest
 from aam_api.helpers.apiRequest import apiRequestUpdate
-from aam_api.helpers.apiRequest import apiTraitsTrend
 from aam_api.helpers.bytesToJson import bytesToJson
 from aam_api.helpers.flattenJson import flattenJson
 from aam_api.helpers.toDataFrame import toDataFrame
@@ -23,18 +23,30 @@ from aam_api.core.client import Client
 
 class Reports:
     @classmethod
-    def trait_trend(cls,traitId, startDate, endDate, breakdown="day"):
+    def traits_trend(cls,traitId, startDate, endDate, breakdown="day"):
         pattern = "%Y-%m-%d"
-        startDate_epoch = int(time.mktime(time.strptime(startDate, pattern)))
-        endDate_epoch = int(time.mktime(time.strptime(endDate, pattern)))
-        data = {"startDate":startDate_epoch,
-                "endDate":endDate_epoch,
+        startDate = datetime.strptime(startDate, pattern)
+        startDate = int(startDate.timestamp()*1000)
+        endDate = datetime.strptime(endDate, pattern)
+        endDate = int(endDate.timestamp()*1000)
+        data = {"startDate":startDate,
+                "endDate":endDate,
                 "interval": "1D",
                 "metricsType": "DEVICE"}
-        response = apiReport(call="traits-trend/{0}".format(traitId), method="get", data=data)
+        response = apiRequest(call="reports/traits-trend/{0}".format(traitId), method="get", data=data)
         status = response.status_code
         if status != 200:
             raise APIError(status)
         else:
             df = pd.DataFrame(response.json())
+            df = pd.DataFrame.from_records(df['metrics'])
+            count = 0
+            for index, row in df.iterrows():
+                date = data['startDate'] / 1000
+                date = datetime.utcfromtimestamp(date).strftime('%Y-%m-%d')
+                date = datetime.strptime(date, "%Y-%m-%d")
+                modified_date = str(date + timedelta(days=count))[:-9]
+                df.at[index, 'date'] = modified_date
+                count += 1
+                df = df[["date", "uniques", "populationUniques"]]
             return df
