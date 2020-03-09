@@ -58,7 +58,7 @@ class Reports:
         startDate = Traits.get_one(traitId).at['createTime', 0].strftime("%Y-%m-%d")
         startDate = datetime.strptime(startDate, pattern)
         startDate = int(startDate.timestamp()*1000)
-        endDate = now.strftime("%Y-%m=%d")
+        endDate = now.strftime("%Y-%m-%d")
         endDate = datetime.strptime(endDate, pattern)
         endDate = int(endDate.timestamp()*1000)
         data = {"startDate":startDate,

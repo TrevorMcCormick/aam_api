@@ -7,7 +7,7 @@ requirements = ["pandas>=0.24", "xlrd>=1", "requests>=2"]
 
 setup(
     name="aam_api",
-    version="0.0.61",
+    version="0.0.62",
     author="Trevor McCormick",
     author_email="trevor.ryan.mccormick@gmail.com",
     description="Adobe Audience Manager API Python Wrapper",
