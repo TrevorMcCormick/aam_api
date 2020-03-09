@@ -38,6 +38,7 @@ To get started:
 * Destinations [CRD]
 * DerivedSignals [CR]
 * Users [R]
+* Reports (Traits Trend) [R]
 
 ### Current extra features [Read] include:
 * Mapper

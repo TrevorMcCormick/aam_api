@@ -34,6 +34,7 @@ These are basic examples. Peek into the repo to see the available parameters.
 | Derived Signals | Get All Derived Signals | ```DerivedSignals.get_many()```|
 | Derived Signals | Create Many Derived Signals | ```DerivedSignals.create()```|  
 | Users | Get All Users | ```Users.get_many()```|  
+| Reports | Get Traits Trend Report | ```Reports.traits_trend(traitId, "2020-03-01", "2020-03-08")
 
 
 #### Specific Examples
