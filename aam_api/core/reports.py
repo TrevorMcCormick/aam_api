@@ -20,7 +20,7 @@ from aam_api.helpers.segmentTraits import segmentTraits
 from aam_api.core.segments import Segments
 from aam_api.helpers.inSegments import inSegmentsBool
 from aam_api.core.client import Client
-from aam_api.core.client import Traits
+from aam_api.core.traits import Traits
 
 class Reports:
     @classmethod
