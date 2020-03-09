@@ -50,3 +50,34 @@ class Reports:
                 count += 1
                 df = df[["date", "uniques", "populationUniques"]]
             return df
+    @classmethod
+    def traits_trend_history(cls,traitId,breakdown="day"):
+        now = datetime.now()
+        pattern = "%Y-%m-%d"
+        startDate = Traits.get_one(traitId).at['createTime', 0].strftime("%Y-%m-%d")
+        startDate = datetime.strptime(startDate, pattern)
+        startDate = int(startDate.timestamp()*1000)
+        endDate = now.strftime("%Y-%m=%d")
+        endDate = datetime.strptime(endDate, pattern)
+        endDate = int(endDate.timestamp()*1000)
+        data = {"startDate":startDate,
+                "endDate":endDate,
+                "interval": "1D",
+                "metricsType": "DEVICE"}
+        response = apiRequest(call="reports/traits-trend/{0}".format(traitId), method="get", data=data)
+        status = response.status_code
+        if status != 200:
+            raise APIError(status)
+        else:
+            df = pd.DataFrame(response.json())
+            df = pd.DataFrame.from_records(df['metrics'])
+            count = 0
+            for index, row in df.iterrows():
+                date = data['startDate'] / 1000
+                date = datetime.utcfromtimestamp(date).strftime('%Y-%m-%d')
+                date = datetime.strptime(date, "%Y-%m-%d")
+                modified_date = str(date + timedelta(days=count))[:-9]
+                df.at[index, 'date'] = modified_date
+                count += 1
+                df = df[["date", "uniques", "populationUniques"]]
+            return df
