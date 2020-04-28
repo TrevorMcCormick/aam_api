@@ -202,18 +202,20 @@ class Traits:
                 except:
                     description = None
                 try:
-                    ttl = int(traits.loc[i]['ttl'])
+                    ttl = traits.loc[i]['ttl']
                 except:
                     ttl = 120
                 data = {"comments":comments,
                         "description":description,
                         "ttl":ttl,
-                        "folderId":int(traits.loc[i]['folderId']),
+                        "folderId":traits.loc[i]['folderId'],
                         "traitRule":traits.loc[i]['traitRule'],
-                        "dataSourceId":int(traits.loc[i]['dataSourceId']),
+                        "dataSourceId":traits.loc[i]['dataSourceId'],
                         "traitType":traits.loc[i]['traitType'],
                         "name":traits.loc[i]['name']}
                 data = json.dumps(data)
+#                 header = {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json', "Content-Type":"application/json"}
+#                 response = requests.post("https://api.demdex.com/v1/traits/", headers=header, data=data)
                 response = apiRequest(call="traits", method="post", data=data)
                 status = response.status_code
                 if status != 201:
