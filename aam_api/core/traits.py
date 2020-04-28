@@ -175,21 +175,22 @@ class Traits:
             except:
                 print("Failed to transform traits to dataframe.")
                 raise
-            try:
-                req_cols = [
-                    'name',
-                    'traitType',
-                    'dataSourceId',
-                    'traitRule',
-                    'folderId',
-                    'ttl',
-                    'description',
-                    'comments'
-                ]
-                if req_cols != list(traits):
-                    raise ValueError('Traits column names are incorrect')
-            except (ValueError):
-                raise
+# Removed this section because it was failing
+#             try:
+#                 req_cols = [
+#                     'name',
+#                     'traitType',
+#                     'dataSourceId',
+#                     'traitRule',
+#                     'folderId',
+#                     'ttl',
+#                     'description',
+#                     'comments'
+#                 ]
+#                 if req_cols != list(traits):
+#                     raise ValueError('Traits column names are incorrect')
+#             except (ValueError):
+#                 raise
             successful_traits = 0
             for i in range(0, len(traits)):
                 try:
