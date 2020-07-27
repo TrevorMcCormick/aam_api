@@ -214,9 +214,7 @@ class Traits:
                         "traitType":traits.loc[i]['traitType'],
                         "name":traits.loc[i]['name']}
                 data = json.dumps(data)
-                header = {'Authorization' : 'Bearer {}'.format(token),'accept': 'application/json', "Content-Type":"application/json"}
-                response = requests.post("https://api.demdex.com")
-#                 response = apiRequest(call="traits", method="post", data=data)
+                response = apiRequest(call="traits", method="post", data=data)
                 status = response.status_code
                 if status != 201:
                     raise APIError(status)
